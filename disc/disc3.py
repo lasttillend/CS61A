@@ -52,7 +52,7 @@ def tree_max(t):
 def height(t):
 	"""Return the height of a tree."""
 	if is_leaf(t):
-		return 1
+		return 0
 	else:
 		return 1 + max([height(b) for b in branches(t)])
 
