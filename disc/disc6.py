@@ -1,6 +1,8 @@
 # Orders of Growth and Linked Lists
 
 # 3 Linked Lists
+
+
 class Link:
     """A linked list.
 
@@ -38,7 +40,6 @@ class Link:
     def second(self, value):
         self.rest.first = value
 
-
     def __repr__(self):
         if self.rest is not Link.empty:
             rest_repr = ', ' + repr(self.rest)
@@ -53,9 +54,10 @@ class Link:
             self = self.rest
         return string + str(self.first) + '>'
 
+
 def prod(iterable):
-    from functools import reduce 
-    from operator import mul 
+    from functools import reduce
+    from operator import mul
     return reduce(mul, iterable, 1)
     # if len(lst) == 0:
     #     return 1
@@ -63,6 +65,8 @@ def prod(iterable):
     #     return lst[0] * prod(lst[1:])
 
 # 3.1
+
+
 def multiply_lnks(lst_of_lnks):
     """
     >>> a = Link(2, Link(3, Link(5)))
@@ -95,9 +99,10 @@ def multiply_lnks(lst_of_lnks):
     #         tail = head
     #     else:
     #         tail.rest = Link(all_prod)
-    #         tail = tail.rest 
+    #         tail = tail.rest
     #     lst_of_lnks = [lnk.rest for lnk in lst_of_lnks]
     # return head
+
 
 # 3.2
 def remove_duplicates(lnk):
@@ -111,27 +116,29 @@ def remove_duplicates(lnk):
     """
     # recursively
     if lnk is Link.empty or lnk.rest is Link.empty:
-        return lnk 
+        return lnk
     elif lnk.first == lnk.rest.first:
-        lnk.rest = lnk.rest.rest 
+        lnk.rest = lnk.rest.rest
         remove_duplicates(lnk)
         return lnk
     else:
         remove_duplicates(lnk.rest)
-        return lnk 
+        return lnk
 
     # # iteratively
-    # cur = lnk 
+    # cur = lnk
     # while cur is not Link.empty and cur.rest is not Link.empty:
     #     if cur.first == cur.rest.first:
     #         cur.rest = cur.rest.rest
     #     else:
-    #         cur = cur.rest 
-    # return lnk 
+    #         cur = cur.rest
+    # return lnk
 
 # 4 Midterm Review
 
 # 4.1
+
+
 def even_weighted(lst):
     """
     >>> x = [1, 2, 3, 4, 5, 6]
@@ -141,19 +148,23 @@ def even_weighted(lst):
     return [idx * lst[idx] for idx in range(len(lst)) if idx % 2 == 0]
 
 # 4.2
+
+
 def quicksort_list(lst):
     """
     >>> quicksort_list([3, 1, 4])
     [1, 3, 4]
     """
     if len(lst) <= 1:
-        return lst 
+        return lst
     pivot = lst[0]
     less = [x for x in lst if x < pivot]
     greater = [x for x in lst if x > pivot]
     return quicksort_list(less) + [pivot] + quicksort_list(greater)
 
 # 4.3
+
+
 def max_product(lst):
     """Return the maximum product that can be formed using lst
     without using any consecutive numbers
@@ -174,16 +185,21 @@ def max_product(lst):
         return max(using_first, without_using_first)
 
 # 4.4
+
+
 def tree(root_label, branches=[]):
     for branch in branches:
         assert is_tree(branch), 'branches must be trees'
     return [root_label] + list(branches)
 
+
 def label(tree):
     return tree[0]
 
+
 def branches(tree):
     return tree[1:]
+
 
 def is_tree(tree):
     if type(tree) != list or len(tree) < 1:
@@ -193,8 +209,10 @@ def is_tree(tree):
             return False
     return True
 
+
 def is_leaf(tree):
     return not branches(tree)
+
 
 def eval_tree(tree):
     """Evaluate an expression tree with functions the root.
@@ -211,10 +229,12 @@ def eval_tree(tree):
     args = [eval_tree(b) for b in branches(tree)]
     if label(tree) == '*':
         return prod(args)
-    else: # label(tree) == '+'
+    else:  # label(tree) == '+'
         return sum(args)
 
 # 4.5
+
+
 class Tree:
     def __init__(self, label, branches=[]):
         for c in branches:
@@ -234,8 +254,8 @@ class Tree:
 
     def __eq__(self, other):
         return type(other) is type(self) and self.label == other.label \
-               and self.branches == other.branches
-    
+            and self.branches == other.branches
+
     def __str__(self):
         def print_tree(t, indent=0):
             tree_str = '  ' * indent + str(t.label) + "\n"
@@ -247,8 +267,10 @@ class Tree:
     def copy_tree(self):
         return Tree(self.label, [b.copy_tree() for b in self.branches])
 
+
 def print_levels(t):
-    level = {} # contains the node at each level
+    level = {}  # contains the node at each level
+
     def get_level(t, depth):
         if depth in level:
             level[depth].append(t.label)
@@ -260,6 +282,8 @@ def print_levels(t):
     get_level(t, 0)
     for depth in level:
         print(level[depth])
+
+
 def redundant_map(t, f):
     """
     >>> double = lambda x: x*2
@@ -271,6 +295,8 @@ def redundant_map(t, f):
     [256] # 1 * 2 ˆ (2 ˆ 3) ; Apply double eight times
     """
     t.label = f(t.label)
-    new_f = lambda x: f(f(x))
+
+    def new_f(x):
+        return f(f(x))
     t.branches = [redundant_map(branch, new_f) for branch in t.branches]
-    return t 
+    return t
