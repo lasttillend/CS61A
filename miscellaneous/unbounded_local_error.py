@@ -3,7 +3,7 @@
 
 def f(x):
 	def g():
-		# nonlocal x
+		nonlocal x
 		print("before plus 1: ", x)
 		x += 1
 		print("after plus 1: ", x)
@@ -18,13 +18,25 @@ print(f(2)())
 # names in a single frame.
 def f(lst):
     def g():
-    	# nonlocal lst # 必须要用nonlocal statement才能避免报错，修改的是f的frame中的lst
-        if len(lst) == 2: # 此时的lst当成f的frame里的lst(nonlocal variable)
+        nonlocal lst  # 必须要用nonlocal statement才能避免报错，修改的是f的frame中的lst
+        if len(lst) == 2:  # 此时的lst当成f的frame里的lst(nonlocal variable)
             lst[0] = 1
         else:
             lst[0] = 2
-        lst = lst[1:] # 但这里左边lst当成g的frame里的lst(local variable)
+        lst = lst[1:]  # 但这里左边lst当成g的frame里的lst(local variable)
     g()
 
 a = [4, 5, 6]
 f(a)
+
+# 3
+def campa(nile):
+    def ding(ding):
+        nonlocal nile
+        def nile(ring):
+            return ding
+    return nile(ding(1914)) + nile(1917)  # 第一个nile不变，仍指向lambda函数；第二个nile被修改了
+
+
+ring = campa(lambda nile: 103) # 返回103 + 1914 = 2017
+print(ring)
