@@ -6,7 +6,7 @@ class Link:
 		self.first = first
 		self.rest = rest
 
-	@property 	
+	@property
 	def second(self):
 		return self.rest.first
 
@@ -29,7 +29,7 @@ class Link:
 		else:
 			rest_str = ''
 		return 'Link({0}{1})'.format(self.first, rest_str)
-		
+
 	def __str__(self):
 		string = '<'
 		while self.rest is not Link.empty:
