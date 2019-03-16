@@ -10,12 +10,20 @@
 ;;; *** Add your own tests here! ***
 ;;; ********************************
 ; BEGIN PROBLEM 0
-;;; Problem 6
+
 (define e 2.718)
 ; expect e
 
+(if 0 (/ 1 0) 1)
+; expect Error
+
+(and 1 #f (/ 1 0))
+; expect #f
+
+
+
 ; END PROBLEM 0
-(exit)
+
 ;;; These are examples from several sections of "The Structure
 ;;; and Interpretation of Computer Programs" by Abelson and Sussman.
 
@@ -649,3 +657,5 @@ one-through-four
 
 (hyp 3 4)
 ; expect 5.000023178253949
+
+(exit)

@@ -276,10 +276,6 @@ def do_lambda_form(expressions, env):
 
 def do_if_form(expressions, env):
     """Evaluate an if form."""
-    check_form(expressions, 2, 3)
-    print("expressions are:", expressions)
-    print('predicate evals to:', scheme_eval(expressions.first, env))
-    print('predicate is:', scheme_truep(scheme_eval(expressions.first, env)))
     if scheme_truep(scheme_eval(expressions.first, env)):
         return scheme_eval(expressions.second.first, env)
     elif len(expressions) == 3:
