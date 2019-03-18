@@ -58,10 +58,17 @@ def eval_all(expressions, env):
     # BEGIN PROBLEM 8
     if expressions is nil:
         return None
-    while expressions.second is not nil:
-        scheme_eval(expressions.first, env)
-        expressions = expressions.second
-    return scheme_eval(expressions.first, env)
+    while expressions is not nil:
+        if expressions.second is nil:
+            return scheme_eval(expressions.first, env, True)
+        else:
+            scheme_eval(expressions.first, env)
+            expressions = expressions.second
+
+    # while expressions.second is not nil:
+    #     scheme_eval(expressions.first, env)
+    #     expressions = expressions.second
+    # return scheme_eval(expressions.first, env, True)
     # END PROBLEM 8
 
 ################
@@ -276,33 +283,54 @@ def do_lambda_form(expressions, env):
 
 def do_if_form(expressions, env):
     """Evaluate an if form."""
+    check_form(expressions, 2, 3)
     if scheme_truep(scheme_eval(expressions.first, env)):
-        return scheme_eval(expressions.second.first, env)
+        return scheme_eval(expressions.second.first, env, True)
     elif len(expressions) == 3:
-        return scheme_eval(expressions.second.second.first, env)
+        return scheme_eval(expressions.second.second.first, env, True)
 
 def do_and_form(expressions, env):
     """Evaluate a (short-circuited) and form."""
     # BEGIN PROBLEM 13
     "*** YOUR CODE HERE ***"
-    if len(expressions) == 0:
-        return True
-    while expressions.second is not nil:
-        if scheme_falsep(scheme_eval(expressions.first, env)):
+    # if len(expressions) == 0:
+    #     return True
+    # while expressions.second is not nil:
+    #     if scheme_falsep(scheme_eval(expressions.first, env)):
+    #         return False
+    #     expressions = expressions.second
+    # return scheme_eval(expressions.first, env, True)
+    result = True
+    while expressions is not nil:
+        if expressions.second is nil:
+            result = scheme_eval(expressions.first, env, True)
+        else:
+            result = scheme_eval(expressions.first, env)
+        if scheme_falsep(result):
             return False
-        expressions = expressions.second
-    return scheme_eval(expressions.first, env)
+        else:
+            expressions = expressions.second
+    return result
     # END PROBLEM 13
 
 def do_or_form(expressions, env):
     """Evaluate a (short-circuited) or form."""
     # BEGIN PROBLEM 13
     "*** YOUR CODE HERE ***"
-    if len(expressions) == 0:
-        return False
-    while expressions is not nil:
-        if scheme_truep(scheme_eval(expressions.first, env)):
-            return scheme_eval(expressions.first, env)
+    # if len(expressions) == 0:
+    #     return False
+    # while expressions is not nil:
+    #     if scheme_truep(scheme_eval(expressions.first, env)):
+    #         return scheme_eval(expressions.first, env, True)
+    #     expressions = expressions.second
+    # return False
+    while not expressions is nil:
+        if expressions.second is nil:
+            result = scheme_eval(expressions.first,env,True)
+        else:
+            result = scheme_eval(expressions.first,env)
+        if scheme_truep(result):
+            return scheme_eval(expressions.first,env,True)
         expressions = expressions.second
     return False
     # END PROBLEM 13
@@ -361,8 +389,17 @@ def do_define_macro(expressions, env):
     """Evaluate a define-macro form."""
     # BEGIN Problem 21
     "*** YOUR CODE HERE ***"
+    check_form(expressions, 2)
+    target = expressions.first
+    if isinstance(target, Pair) and scheme_symbolp(target.first):
+        args = target.second
+        body = expressions.second
+        env.define(target.first, MacroProcedure(args, body, env))
+        return target.first
+    else:
+        bad_target = target.first if isinstance(target, Pair) else target
+        raise SchemeError('non-symbol: {0}'.format(bad_target))
     # END Problem 21
-
 
 SPECIAL_FORMS = {
     'and': do_and_form,
@@ -534,13 +571,37 @@ def optimize_tail_calls(original_scheme_eval):
             result = Thunk(expr, env)
         # BEGIN
         "*** YOUR CODE HERE ***"
+        if scheme_symbolp(expr):
+            return env.lookup(expr)
+        elif self_evaluating(expr):
+            return expr
+
+        while isinstance(result, Thunk):
+            expr, env = result.expr, result.env
+            # All non-atomic expressions are lists (combinations)
+            if not scheme_listp(expr):
+                raise SchemeError('malformed list: {0}'.format(repl_str(expr)))
+
+            first, rest = expr.first, expr.second
+            if scheme_symbolp(first) and first in SPECIAL_FORMS:
+                result = SPECIAL_FORMS[first](rest, env)
+            else:
+                operator = optimized_eval(first, env)
+                check_procedure(operator)
+                if isinstance(operator, MacroProcedure):
+                    # apply to arguments without first evaluating them and then the result of this application is evaluated
+                    result = optimized_eval(operator.apply_macro(rest, env), env)
+                else:
+                    operands = rest.map(lambda operand: optimized_eval(operand, env))
+                    result = scheme_apply(operator, operands, env)
+        return result
         # END
     return optimized_eval
 
 ################################################################
 # Uncomment the following line to apply tail call optimization #
 ################################################################
-# scheme_eval = optimize_tail_calls(scheme_eval)
+scheme_eval = optimize_tail_calls(scheme_eval)
 
 
 ####################
@@ -697,3 +758,7 @@ def run(*argv):
     read_eval_print_loop(next_line, create_global_frame(), startup=True,
                          interactive=interactive, load_files=load_files)
     tscheme_exitonclick()
+
+
+
+
