@@ -90,3 +90,38 @@ def f_then_g(f, g, n):
 grow = lambda n: f_then_g(grow, print, n//10)
 shrink = lambda n: f_then_g(print, shrink, n//10)
 inverse_cascade(1234)
+
+# More mutual recusion examples
+# 1. Hofstader Sequence
+"""
+Hofstadter Female and Male sequences are defined by:
+    F(0) = 1
+    M(0) = 0
+    F(n) = n - M(F(n - 1)), n > 0
+    M(n) = n - F(M(n - 1)), n > 0
+"""
+def hofstader_female(n):
+    if n < 0:
+        return
+    elif n == 0:
+        return 1
+    else:
+        return n - hofstader_male(hofstader_female(n - 1))
+
+def hofstader_male(n):
+    if n < 0:
+        return
+    elif n == 0:
+        return 0
+    else:
+        return n - hofstader_female(hofstader_male(n - 1))
+
+print("F:", end = " ")
+for i in range(20):
+    print(hofstader_female(i), end = " ")
+
+print("\n")
+print("M:", end = " ")
+for i in range(20):
+    print(hofstader_male(i), end = " ")
+

@@ -65,8 +65,6 @@ def prod(iterable):
     #     return lst[0] * prod(lst[1:])
 
 # 3.1
-
-
 def multiply_lnks(lst_of_lnks):
     """
     >>> a = Link(2, Link(3, Link(5)))

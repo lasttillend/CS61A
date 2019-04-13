@@ -205,3 +205,54 @@ def adjoin(s, v):
     elif s.label > v:
         return BTree(s.label, adjoin(s.left, v), s.right)
 
+def in_order(b):
+    """Returns the items in B, a binary search tree, in sorted order.
+
+    >>> b1 = BTree(2,
+                   BTree(1),
+                   BTree(4, BTree(3)))
+    >>> in_order(b1)
+    [1, 2, 3, 4]
+    >>> singleton = BTree(4)
+    >>> in_order(singleton)
+    [4]
+    """
+    if b is BTree.empty:
+        return []
+    return in_order(b.left) + [b.label] + in_order(b.right)
+
+def size(t):
+    """Returns the number of elements in a tree.
+
+    >>> t1 = Tree(1,
+                    [Tree(2, [Tree(4)]),
+                     Tree(3)])
+    >>> size(t1)
+    4
+    """
+    return 1 + sum([size(b) for b in t.branches])
+
+def nth_largest(b, n):
+    """Returns the Nth largest item in a binary search tree T.
+
+    >>> b1 = BTree(2,
+                   BTree(1),
+                   BTree(4, BTree(3)))
+    >>> nth_largest(b1, 1)
+    4
+    >>> nth_largest(b1, 3)
+    2
+    >>> nth_largest(b1, 4)
+    1
+    """
+    if b is BTree.empty:
+        return None
+    right = size(b.right)
+    if right == n - 1:
+        return b.label
+    elif right > n - 1:
+        return nth_largest(b.right, n)
+    else:
+        return nth_largest(b.left, n - 1 - right)
+
+

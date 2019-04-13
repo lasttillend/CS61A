@@ -9,7 +9,7 @@ class Link:
 		self.first = first
 		self.rest = rest
 
-	@property 	
+	@property
 	def second(self):
 		return self.rest.first
 
@@ -32,7 +32,7 @@ class Link:
 		else:
 			rest_str = ''
 		return 'Link({0}{1})'.format(self.first, rest_str)
-		
+
 	def __str__(self):
 		string = '<'
 		while self.rest is not Link.empty:
@@ -40,8 +40,8 @@ class Link:
 			self = self.rest
 		return string + str(self.first) + '>'
 
-# 2 
-def skip(lst): 
+# 2
+def skip(lst):
 	"""
 	Returns a new Link with every other element skipped.
 
@@ -57,7 +57,7 @@ def skip(lst):
 	if lst is Link.empty:
 		return Link.empty
 	elif lst.rest is Link.empty:
-		return Link(lst.first) 
+		return Link(lst.first)
 	else:
 		return Link(lst.first, skip(lst.rest.rest))
 
@@ -73,10 +73,15 @@ def skip2(lst):
 	"""
 	if lst is Link.empty or lst.rest is Link.empty:
 		return None
-	skip2(lst.rest.rest)	
+	skip2(lst.rest.rest)
 	lst.rest = lst.rest.rest
-	
-# 4 
+
+a = Link(1, Link(2, Link(3, Link(4))))
+b = skip2(a)
+print(b)
+print(a)
+
+# 4
 def reverse(lst):
 	"""
 	>>> a = Link(1, Link(2, Link(3)))
@@ -115,7 +120,7 @@ class Tree:
     def __eq__(self, other):
         return type(other) is type(self) and self.label == other.label \
                and self.branches == other.branches
-    
+
     def __str__(self):
         def print_tree(t, indent=0):
             tree_str = '  ' * indent + str(t.label) + "\n"
@@ -147,7 +152,7 @@ def contains_n(elem, n, t):
 	if n == 0:
 		return True
 	elif n == 1 and t.is_leaf():
-		return t.label == elem  
+		return t.label == elem
 	elif t.label == elem:
 		return True in [contains_n(elem, n - 1, b) for b in t.branches]
 	else:

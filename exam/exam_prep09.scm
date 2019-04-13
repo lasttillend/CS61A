@@ -31,6 +31,7 @@
 
     (search (eval sym) sym))
 
+
 ; 2 Streams
 ; 1. Repeat n cycle
 (define (stream-to-list s n)

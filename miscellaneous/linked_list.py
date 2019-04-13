@@ -40,6 +40,7 @@ class Link:
 s = Link(3, Link(4, Link(5)))
 square = lambda x: x * x
 odd = lambda x: x % 2 == 1
+print(Link(1).__repr__())
 
 def extend_link(s, t):
 	"""Return a Link with elements of s followed by those of t."""

@@ -90,3 +90,5 @@ CREATE TABLE stacks AS
     WHERE num <= 3 AND height > last_dog_height
   )
   SELECT dogs, so_far_height FROM stacks WHERE so_far_height >= 170 ORDER BY so_far_height;
+
+

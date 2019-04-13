@@ -13,7 +13,7 @@ def f(x):
 print(f(2)())
 
 # 2.
-# Variable in the current frame cannot be modifed using the nonlocal keyword.
+# Variable in the current frame cannot be modified using the nonlocal keyword.
 # This means we cannot have both a local and nonlocal variable with the same
 # names in a single frame.
 def f(lst):
